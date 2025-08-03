@@ -1,0 +1,231 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Default color scheme */
+  --background: 220 23% 95%;
+  --foreground: 220 10% 15%;
+  --primary: 220 70% 50%;
+  --primary-foreground: 220 0% 98%;
+  --secondary: 220 15% 85%;
+  --secondary-foreground: 220 10% 25%;
+  --accent: 45 100% 65%;
+  --accent-foreground: 45 10% 15%;
+  --muted: 220 15% 90%;
+  --muted-foreground: 220 10% 45%;
+  --border: 220 20% 80%;
+  --success: 120 70% 50%;
+  --success-foreground: 120 0% 98%;
+  --error: 0 70% 50%;
+  --error-foreground: 0 0% 98%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 38 10% 15%;
+  
+  /* High contrast mode */
+  --hc-background: 0 0% 100%;
+  --hc-foreground: 0 0% 0%;
+  --hc-primary: 240 100% 30%;
+  --hc-primary-foreground: 0 0% 100%;
+  --hc-secondary: 0 0% 85%;
+  --hc-secondary-foreground: 0 0% 15%;
+  --hc-accent: 45 100% 40%;
+  --hc-accent-foreground: 0 0% 0%;
+  --hc-success: 120 100% 25%;
+  --hc-success-foreground: 0 0% 100%;
+  --hc-error: 0 100% 40%;
+  --hc-error-foreground: 0 0% 100%;
+  --hc-border: 0 0% 60%;
+  
+  /* Deuteranopia-friendly (green-blind) */
+  --d-primary: 210 100% 50%;
+  --d-accent: 30 100% 50%;
+  --d-success: 210 70% 50%;
+  --d-error: 0 70% 50%;
+  
+  /* Protanopia-friendly (red-blind) */
+  --p-primary: 210 100% 50%;
+  --p-accent: 45 100% 50%;
+  --p-success: 210 70% 50%;
+  --p-error: 25 70% 50%;
+  
+  /* Tritanopia-friendly (blue-blind) */
+  --t-primary: 340 70% 50%;
+  --t-accent: 45 100% 50%;
+  --t-success: 120 70% 50%;
+  --t-error: 0 70% 50%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* High contrast mode */
+  .high-contrast {
+    --background: var(--hc-background);
+    --foreground: var(--hc-foreground);
+    --primary: var(--hc-primary);
+    --primary-foreground: var(--hc-primary-foreground);
+    --secondary: var(--hc-secondary);
+    --secondary-foreground: var(--hc-secondary-foreground);
+    --accent: var(--hc-accent);
+    --accent-foreground: var(--hc-accent-foreground);
+    --success: var(--hc-success);
+    --success-foreground: var(--hc-success-foreground);
+    --error: var(--hc-error);
+    --error-foreground: var(--hc-error-foreground);
+    --border: var(--hc-border);
+  }
+
+  /* Colorblind-friendly modes */
+  .deuteranopia {
+    --primary: var(--d-primary);
+    --accent: var(--d-accent);
+    --success: var(--d-success);
+    --error: var(--d-error);
+  }
+
+  .protanopia {
+    --primary: var(--p-primary);
+    --accent: var(--p-accent);
+    --success: var(--p-success);
+    --error: var(--p-error);
+  }
+
+  .tritanopia {
+    --primary: var(--t-primary);
+    --accent: var(--t-accent);
+    --success: var(--t-success);
+    --error: var(--t-error);
+  }
+
+  /* Focus styles for accessibility */
+  *:focus-visible {
+    outline: 3px solid hsl(var(--primary));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Skip to content link */
+  .skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 1000;
+  }
+
+  .skip-to-content:focus {
+    top: 6px;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom utilities for the trivia game */
+.question-option {
+  transition: all 0.2s ease-in-out;
+}
+
+.question-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.question-option.selected {
+  border-width: 3px;
+  border-color: hsl(var(--primary));
+}
+
+.question-option.correct {
+  background-color: hsl(var(--success));
+  color: hsl(var(--success-foreground));
+  border-color: hsl(var(--success));
+}
+
+.question-option.incorrect {
+  background-color: hsl(var(--error));
+  color: hsl(var(--error-foreground));
+  border-color: hsl(var(--error));
+}
+
+.timer-warning {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Large text mode */
+.large-text {
+  font-size: 1.25em;
+}
+
+.large-text h1 {
+  font-size: 2.5em;
+}
+
+.large-text h2 {
+  font-size: 2em;
+}
+
+.large-text h3 {
+  font-size: 1.75em;
+}
+
+.large-text .text-sm {
+  font-size: 1.125em;
+}
+
+.large-text .text-lg {
+  font-size: 1.5em;
+}

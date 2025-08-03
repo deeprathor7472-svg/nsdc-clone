@@ -1,0 +1,930 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { 
+  Users, 
+  Award, 
+  BookOpen, 
+  Building2, 
+  Briefcase, 
+  GraduationCap, 
+  Globe, 
+  Phone, 
+  Mail, 
+  Search,
+  ChevronRight,
+  Calendar,
+  Download,
+  ExternalLink,
+  MapPin,
+  Target,
+  TrendingUp,
+  FileText,
+  Video,
+  Newspaper
+} from "lucide-react";
+
+export default function NSDCWebsite() {
+  const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const [email, setEmail] = useState("");
+  const [certificateNumber, setCertificateNumber] = useState("");
+  const [verificationResult, setVerificationResult] = useState<any>(null);
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  const quickLinks = {
+    "WHO WE ARE": [
+      "About Us",
+      "Vision and Mission", 
+      "Board of Directors",
+      "Our Team",
+      "Regulatory Body-NCVET"
+    ],
+    "WHAT WE DO": [
+      "Overview",
+      "Apprenticeship",
+      "Industry Partnership & CSR",
+      "Standards",
+      "Learning Resources & Technology",
+      "WorldSkills & IndiaSkills"
+    ],
+    "SCHEMES & INITIATIVES": [
+      "PMKVY",
+      "PMKK", 
+      "Technical Intern Training Program (TITP)"
+    ],
+    "PARTNERS": [
+      "NSDC Training Partners",
+      "Sector Skill Councils",
+      "Innovation and Engagement",
+      "Find A Training Partner",
+      "Debt Service Default Accounts"
+    ]
+  };
+
+  const services = [
+    "SMART",
+    "SDMS",
+    "SDMS Training",
+    "Takshashila - National Portal for Trainers and Assessors",
+    "Kaushal Mart - Skilling Resource Marketplace",
+    "Kaushal e-Pustakalaya",
+    "Entrepreneurship Support Initiatives",
+    "Rozgar Mela"
+  ];
+
+  const notices = [
+    {
+      title: "Advertisement for the recruitment of CEO for Iron &...",
+      dateRange: "14 TO 31 JUL"
+    },
+    {
+      title: "Advertisement for the recruitment of CEO for Mining...",
+      dateRange: "21 TO 31 JUL"
+    },
+    {
+      title: "Advertisement for the recruitment of CEO for Iron &...",
+      dateRange: "14 TO 31 JUL"
+    }
+  ];
+
+  const mediaResources = [
+    "Press Releases",
+    "Press Coverage", 
+    "Videos",
+    "Annual Reports",
+    "Skill Reports",
+    "NSDC Connect",
+    "Skill Matters",
+    "Success Stories",
+    "Policy and Guidelines",
+    "NSDC Skills Intelligence Platform (SkillsIP)"
+  ];
+
+  // Certificate download function
+  const handleDownloadCertificate = (certificate: any) => {
+    // Create an HTML certificate that can be printed as PDF
+    const certificateHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>NSDC Certificate - ${certificate.certificateId}</title>
+    <style>
+        body { 
+            font-family: 'Times New Roman', serif; 
+            margin: 0; 
+            padding: 40px; 
+            background: white;
+        }
+        .certificate {
+            border: 8px solid #1e40af;
+            padding: 40px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header { 
+            color: #1e40af; 
+            font-size: 24px; 
+            font-weight: bold; 
+            margin-bottom: 20px;
+        }
+        .title { 
+            font-size: 36px; 
+            color: #1f2937; 
+            margin: 30px 0; 
+            text-decoration: underline;
+        }
+        .content { 
+            font-size: 18px; 
+            line-height: 1.8; 
+            margin: 20px 0;
+            color: #374151;
+        }
+        .details {
+            margin: 30px 0;
+            text-align: left;
+            display: inline-block;
+        }
+        .detail-row {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .label {
+            font-weight: bold;
+            color: #1e40af;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate">
+        <div class="header">
+            NATIONAL SKILL DEVELOPMENT CORPORATION<br>
+            Government of India<br>
+            Ministry of Skill Development & Entrepreneurship
+        </div>
+        
+        <div class="title">Certificate of Completion</div>
+        
+        <div class="content">
+            <em>This is to certify that</em><br><br>
+            <strong style="font-size: 24px; color: #1e40af;">${certificate.candidateName}</strong><br>
+            ${certificate.fatherName ? `<em>Son/Daughter of ${certificate.fatherName}</em><br><br>` : '<br>'}
+            
+            has successfully completed skill training in<br>
+            <strong style="font-size: 20px; color: #1e40af;">${certificate.course}</strong><br>
+            ${certificate.trainingPeriod ? `from the period <strong>${certificate.trainingPeriod}</strong><br>` : ''}
+            at <strong>${certificate.trainingPartner}</strong><br>
+            ${certificate.level ? `at <strong>${certificate.level}</strong><br>` : ''}
+        </div>
+        
+        <div class="details">
+            <div class="detail-row">
+                <span class="label">Certificate ID:</span> ${certificate.certificateId}
+            </div>
+            ${certificate.idNumber ? `<div class="detail-row"><span class="label">ID Number:</span> ${certificate.idNumber}</div>` : ''}
+            <div class="detail-row">
+                <span class="label">Issue Date:</span> ${certificate.issueDate}
+            </div>
+            <div class="detail-row">
+                <span class="label">Status:</span> ${certificate.status}
+            </div>
+        </div>
+        
+        <div class="footer">
+            This certificate is digitally verified and authentic.<br>
+            For verification, visit: www.nsdc.gov.in
+        </div>
+    </div>
+</body>
+</html>
+    `;
+
+    const blob = new Blob([certificateHTML], { type: 'text/html' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `NSDC_Certificate_${certificate.certificateId}.html`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
+  // Certificate verification function
+  const handleCertificateVerification = async () => {
+    const trimmedNumber = certificateNumber.trim();
+    if (!trimmedNumber) return;
+    
+    setIsVerifying(true);
+    setVerificationResult(null);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Mock verification result - in a real application, this would call an actual verification API
+    const mockResults = [
+      {
+        certificateId: "NSDC2025001234",
+        candidateName: "DEEPANSHU",
+        fatherName: "ASHOK KUMAR",
+        course: "FOOD PRODUCTION & KITCHEN",
+        sector: "Food & Beverage",
+        trainingPartner: "National Skills Qualifications Framework",
+        level: "Level 1",
+        idNumber: "FR-CON-600901",
+        aadhaarNumber: "8051-0915-2216",
+        trainingPeriod: "OCT/2024 to APR/2025",
+        issueDate: "2025-04-20",
+        status: "Valid",
+        grade: "Completed",
+        verified: true
+      },
+      {
+        certificateId: "NSDC2025001235",
+        candidateName: "SOURAB",
+        fatherName: "SUSHIL",
+        course: "FOOD PRODUCTION & KITCHEN",
+        sector: "Food & Beverage",
+        trainingPartner: "National Skills Qualifications Framework",
+        level: "Level 1",
+        idNumber: "FR-CON-600902",
+        aadhaarNumber: "6076-0953-0859",
+        trainingPeriod: "OCT/2024 to APR/2025",
+        issueDate: "2025-04-20",
+        status: "Valid",
+        grade: "Completed",
+        verified: true
+      },
+      {
+        certificateId: "NSDC2024001234",
+        candidateName: "Rajesh Kumar Singh",
+        course: "Digital Marketing Executive",
+        sector: "Media & Entertainment",
+        trainingPartner: "Tech Skills Academy",
+        issueDate: "2024-03-15",
+        expiryDate: "2027-03-15",
+        status: "Valid",
+        grade: "A+"
+      },
+      {
+        certificateId: "NSDC2024005678",
+        candidateName: "Priya Sharma",
+        course: "Healthcare Assistant",
+        sector: "Healthcare",
+        trainingPartner: "Health Skills Institute",
+        issueDate: "2024-02-20",
+        expiryDate: "2027-02-20",
+        status: "Valid",
+        grade: "A"
+      },
+      {
+        certificateId: "NSDC2024009876",
+        candidateName: "Amit Patel",
+        course: "Automotive Service Technician",
+        sector: "Automotive",
+        trainingPartner: "Auto Skills Center",
+        issueDate: "2024-01-10",
+        expiryDate: "2027-01-10",
+        status: "Valid",
+        grade: "B+"
+      }
+    ];
+    
+    // Find matching certificate
+    const result = mockResults.find(cert => 
+      cert.certificateId.toLowerCase() === trimmedNumber.toLowerCase()
+    );
+    
+
+    
+    if (result) {
+      setVerificationResult(result);
+    } else {
+      setVerificationResult({
+        status: "Not Found",
+        message: "Certificate not found. Please verify the certificate number and try again."
+      });
+    }
+    
+    setIsVerifying(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Top Bar */}
+          <div className="flex justify-between items-center py-2 text-sm border-b border-gray-100">
+            <div className="flex items-center gap-4">
+              <a href="#" className="text-blue-600 hover:text-blue-800">Helpline</a>
+              <a href="#" className="text-blue-600 hover:text-blue-800">COVID Support</a>
+              <a href="#" className="text-blue-600 hover:text-blue-800">Careers</a>
+              <a href="#" className="text-blue-600 hover:text-blue-800">Tenders</a>
+            </div>
+            <div className="flex items-center gap-2">
+              <select 
+                value={selectedLanguage}
+                onChange={(e) => setSelectedLanguage(e.target.value)}
+                className="border border-gray-300 rounded px-2 py-1 text-xs"
+              >
+                <option>English</option>
+                <option>Hindi</option>
+                <option>Tamil</option>
+                <option>Telugu</option>
+              </select>
+              <Button variant="outline" size="sm" className="text-xs">
+                Translate
+              </Button>
+            </div>
+          </div>
+
+          {/* Main Header */}
+          <div className="py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">NSDC</span>
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    National Skill Development Corporation
+                  </h1>
+                  <p className="text-sm text-gray-600">Building Skills for India's Future</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Input 
+                    placeholder="Search..." 
+                    className="pl-10 w-64"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <nav className="border-t border-gray-100">
+            <div className="flex items-center justify-between py-3">
+              <div className="flex items-center gap-8">
+                <a href="#who-we-are" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  Who We Are
+                </a>
+                <a href="#what-we-do" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  What We Do
+                </a>
+                <a href="#schemes" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  Schemes & Initiatives
+                </a>
+                <a href="#partners" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  Partners
+                </a>
+                <a href="#services" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  Services
+                </a>
+                <a href="#media" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  Media & Information
+                </a>
+                <a href="#notices" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  Notices
+                </a>
+                <a href="#contact" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  Contact Us
+                </a>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-4xl font-bold mb-6">
+              Empowering India Through Skills Development
+            </h2>
+            <p className="text-xl mb-8 max-w-3xl mx-auto">
+              NSDC is a catalyst for skill development by fostering collaboration between industry and academia to create a skilled workforce for India's economic growth.
+            </p>
+            
+            {/* Certificate Verification Search Bar */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8 max-w-2xl mx-auto">
+              <h3 className="text-xl font-semibold mb-4 flex items-center justify-center gap-2">
+                <Award className="h-5 w-5" />
+                Verify Your Certificate
+              </h3>
+              <div className="flex gap-3">
+                <div className="flex-1">
+                  <Input
+                    type="text"
+                    placeholder="Enter Certificate Number (e.g., NSDC2024001234)"
+                    value={certificateNumber}
+                    onChange={(e) => setCertificateNumber(e.target.value)}
+                    className="bg-white text-gray-900 placeholder-gray-500"
+                    onKeyPress={(e) => e.key === 'Enter' && handleCertificateVerification()}
+                  />
+                </div>
+                <Button 
+                  onClick={handleCertificateVerification}
+                  disabled={isVerifying || !certificateNumber.trim()}
+                  className="bg-white text-blue-600 hover:bg-gray-100 px-6"
+                >
+                  {isVerifying ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                      Verifying...
+                    </>
+                  ) : (
+                    <>
+                      <Search className="h-4 w-4 mr-2" />
+                      Verify
+                    </>
+                  )}
+                </Button>
+              </div>
+              <p className="text-sm text-white/80 mt-2">
+                Try sample certificates: NSDC2025001234, NSDC2025001235, NSDC2024001234
+              </p>
+            </div>
+
+            <div className="flex justify-center gap-4">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+                Find Training Centers
+              </Button>
+              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600">
+                Explore Schemes
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Certificate Verification Results */}
+      {verificationResult && (
+        <section className="py-8 bg-gray-50">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            {verificationResult.status === "Not Found" ? (
+              <Card className="border-red-200 bg-red-50">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 bg-red-100 rounded-full">
+                      <Search className="h-5 w-5 text-red-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-red-800">Certificate Not Found</h3>
+                  </div>
+                  <p className="text-red-700 mb-4">{verificationResult.message}</p>
+                  <div className="bg-red-100 p-4 rounded-lg">
+                    <h4 className="font-medium text-red-800 mb-2">Verification Tips:</h4>
+                    <ul className="text-sm text-red-700 space-y-1">
+                      <li>• Ensure the certificate number is entered correctly</li>
+                      <li>• Check for any extra spaces or special characters</li>
+                      <li>• Certificate numbers are case-sensitive</li>
+                      <li>• Contact your training partner if the issue persists</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="border-green-200 bg-green-50">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-green-100 rounded-full">
+                      <Award className="h-6 w-6 text-green-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-green-800">Certificate Verified Successfully</CardTitle>
+                      <Badge className="bg-green-100 text-green-800 mt-1">
+                        {verificationResult.status}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-sm font-medium text-gray-600">Certificate ID</label>
+                        <p className="text-lg font-mono text-gray-900">{verificationResult.certificateId}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-600">Candidate Name</label>
+                        <p className="text-lg text-gray-900">{verificationResult.candidateName}</p>
+                      </div>
+                      {verificationResult.fatherName && (
+                        <div>
+                          <label className="text-sm font-medium text-gray-600">Father's Name</label>
+                          <p className="text-lg text-gray-900">{verificationResult.fatherName}</p>
+                        </div>
+                      )}
+                      <div>
+                        <label className="text-sm font-medium text-gray-600">Course</label>
+                        <p className="text-lg text-gray-900">{verificationResult.course}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-600">Sector</label>
+                        <p className="text-lg text-gray-900">{verificationResult.sector}</p>
+                      </div>
+                      {verificationResult.level && (
+                        <div>
+                          <label className="text-sm font-medium text-gray-600">Level</label>
+                          <p className="text-lg text-gray-900">{verificationResult.level}</p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-sm font-medium text-gray-600">Training Partner</label>
+                        <p className="text-lg text-gray-900">{verificationResult.trainingPartner}</p>
+                      </div>
+                      {verificationResult.trainingPeriod && (
+                        <div>
+                          <label className="text-sm font-medium text-gray-600">Training Period</label>
+                          <p className="text-lg text-gray-900">{verificationResult.trainingPeriod}</p>
+                        </div>
+                      )}
+                      <div>
+                        <label className="text-sm font-medium text-gray-600">Issue Date</label>
+                        <p className="text-lg text-gray-900">{verificationResult.issueDate}</p>
+                      </div>
+                      {verificationResult.expiryDate && (
+                        <div>
+                          <label className="text-sm font-medium text-gray-600">Expiry Date</label>
+                          <p className="text-lg text-gray-900">{verificationResult.expiryDate}</p>
+                        </div>
+                      )}
+                      <div>
+                        <label className="text-sm font-medium text-gray-600">Status</label>
+                        <p className="text-lg text-gray-900">{verificationResult.grade || verificationResult.status}</p>
+                      </div>
+                      {verificationResult.idNumber && (
+                        <div>
+                          <label className="text-sm font-medium text-gray-600">ID Number</label>
+                          <p className="text-lg font-mono text-gray-900">{verificationResult.idNumber}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="pt-4 border-t border-green-200">
+                    <div className="flex gap-3 flex-wrap">
+                      <Button 
+                        size="sm" 
+                        className="bg-green-600 hover:bg-green-700"
+                        onClick={() => handleDownloadCertificate(verificationResult)}
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        Download Certificate
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        View Training Partner
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          setVerificationResult(null);
+                          setCertificateNumber("");
+                        }}
+                      >
+                        Verify Another Certificate
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* What We Do Section */}
+      <section id="what-we-do" className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">WHAT WE DO</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Comprehensive skill development initiatives to bridge the skill gap and enhance employability
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                  <Briefcase className="h-6 w-6 text-blue-600" />
+                </div>
+                <CardTitle>Market Led Partnership</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Creating market-driven skill development partnerships with industry leaders
+                </p>
+                <Button variant="outline" size="sm">
+                  Learn More <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                  <Building2 className="h-6 w-6 text-green-600" />
+                </div>
+                <CardTitle>Industry Partnership & CSR</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Engaging with industry partners for sustainable skill development initiatives
+                </p>
+                <Button variant="outline" size="sm">
+                  Learn More <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                  <MapPin className="h-6 w-6 text-purple-600" />
+                </div>
+                <CardTitle>Find A NSDC Training Centre</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Locate accredited training centers across India for skill development programs
+                </p>
+                <Button variant="outline" size="sm">
+                  Find Centers <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                  <Award className="h-6 w-6 text-orange-600" />
+                </div>
+                <CardTitle>Standards & Quality Assurance</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Maintaining high standards and quality in skill development programs
+                </p>
+                <Button variant="outline" size="sm">
+                  Learn More <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                  <Globe className="h-6 w-6 text-red-600" />
+                </div>
+                <CardTitle>Indo-Japan Programs</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Bilateral skill development programs with Japan for technical expertise
+                </p>
+                <Button variant="outline" size="sm">
+                  Explore <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-4">
+                  <TrendingUp className="h-6 w-6 text-teal-600" />
+                </div>
+                <CardTitle>Skill Impact Bond</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Innovative financing mechanisms for outcome-based skill development
+                </p>
+                <Button variant="outline" size="sm">
+                  Learn More <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Notices & Updates */}
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">NOTICES & UPDATES</h2>
+              <p className="text-gray-600">Stay updated with latest announcements and opportunities</p>
+            </div>
+            <Button variant="outline">
+              View All <ExternalLink className="h-4 w-4 ml-2" />
+            </Button>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {notices.map((notice, index) => (
+              <Card key={index} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <Badge variant="outline" className="text-xs">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      {notice.dateRange}
+                    </Badge>
+                  </div>
+                  <h3 className="font-medium text-gray-900 mb-3 line-clamp-2">
+                    {notice.title}
+                  </h3>
+                  <Button variant="outline" size="sm">
+                    Read More
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Links */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900 text-center mb-12">QUICK LINKS</h2>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Object.entries(quickLinks).map(([category, links]) => (
+              <Card key={category}>
+                <CardHeader>
+                  <CardTitle className="text-lg text-blue-600">{category}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2">
+                    {links.map((link, index) => (
+                      <li key={index}>
+                        <a 
+                          href="#" 
+                          className="text-sm text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1"
+                        >
+                          <ChevronRight className="h-3 w-3" />
+                          {link}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Services */}
+      <section id="services" className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">SERVICES</h2>
+            <p className="text-lg text-gray-600">Digital platforms and tools for skill development ecosystem</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {services.map((service, index) => (
+              <Card key={index} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6 text-center">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <Target className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <h3 className="font-medium text-gray-900 mb-2">{service}</h3>
+                  <Button variant="outline" size="sm">
+                    Access
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter Signup */}
+      <section className="py-12 bg-blue-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h2 className="text-2xl font-bold mb-2">NEWSLETTER</h2>
+              <p className="text-blue-100">Stay updated with latest skill development news and opportunities</p>
+            </div>
+            <div className="flex gap-3 w-full md:w-auto">
+              <Input
+                placeholder="Enter Your Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-white text-gray-900 min-w-[300px]"
+              />
+              <Button variant="secondary">
+                Subscribe
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold">NSDC</span>
+                </div>
+                <span className="font-semibold">National Skill Development Corporation</span>
+              </div>
+              <p className="text-gray-400 text-sm">
+                Building a skilled workforce for India's economic growth through innovative skill development initiatives.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">MEDIA & INFORMATION</h3>
+              <ul className="space-y-2">
+                {mediaResources.slice(0, 5).map((resource, index) => (
+                  <li key={index}>
+                    <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      {resource}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">OTHER LINKS</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">RTI</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Careers</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Contact Us</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Common Norms</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Site Map</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Shebox</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">CONNECT WITH US</h3>
+              <div className="flex gap-3 mb-4">
+                <Button size="sm" variant="outline" className="border-gray-600 text-gray-400 hover:text-white">
+                  <span className="sr-only">Facebook</span>
+                  f
+                </Button>
+                <Button size="sm" variant="outline" className="border-gray-600 text-gray-400 hover:text-white">
+                  <span className="sr-only">Twitter</span>
+                  t
+                </Button>
+                <Button size="sm" variant="outline" className="border-gray-600 text-gray-400 hover:text-white">
+                  <span className="sr-only">LinkedIn</span>
+                  in
+                </Button>
+                <Button size="sm" variant="outline" className="border-gray-600 text-gray-400 hover:text-white">
+                  <span className="sr-only">YouTube</span>
+                  yt
+                </Button>
+              </div>
+              <div className="text-sm text-gray-400">
+                <p className="flex items-center gap-2 mb-2">
+                  <Phone className="h-4 w-4" />
+                  Helpline: 1800-xxx-xxxx
+                </p>
+                <p className="flex items-center gap-2">
+                  <Mail className="h-4 w-4" />
+                  info@nsdcindia.org
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+            <p className="text-gray-400 text-sm">
+              © Copyright 2022 - NSDC - All Rights Reserved | 
+              <a href="#" className="hover:text-white ml-1">Disclaimer</a> | 
+              <a href="#" className="hover:text-white ml-1">Sitemap</a>
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
